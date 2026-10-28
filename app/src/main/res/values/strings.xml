@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Edad Canina</string>
+    <string name="txt_titulo">Convertidor de edad canina</string>
+    <string name="input_age">Introduzca la edad de su perro:</string>
+    <string name="btn_calc">Calcular</string>
+    <string name="tu_edad_format">Si tu perro fuero humano tendría %d años</string>
+</resources>
