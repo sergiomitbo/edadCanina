@@ -191,3 +191,28 @@ Comprueba en GitHub que tu fork tiene ahora dos ramas: `main` y `v2-validacion`.
 - [ ] No quedan números mágicos en `MainActivity`.
 - [ ] `onCreate()` solo prepara la pantalla; la lógica está en `calcularEdad()`.
 - [ ] El trabajo está en la rama `v2-validacion`, no en `main`.
+
+---
+
+## 📝 Respuestas · Sergio Mitchell Bocero
+
+### Paso 1 · Pruebas con la v1
+
+| Entrada | ¿Qué ocurre? |
+|---|---|
+| *(campo vacío)* | La app se cierra: `NumberFormatException: For input string: ""` |
+| `abc` | La app se cierra: `NumberFormatException` |
+| `3.5` | La app se cierra: `parseInt` no acepta decimales |
+| `0` | No se cierra, pero dice que tendría 0 años |
+| `-4` | No se cierra, pero da -28 años |
+| `99999999999` | La app se cierra: el número no cabe en un `int` |
+| `400000000` | No se cierra, pero da -1494967296 años |
+
+La excepción la lanza `Integer.parseInt()`. El último caso no se cierra porque 400000000 sí cabe en un `int`, pero al multiplicarlo por 7 (2800000000) se pasa del máximo (2147483647) y el resultado se desborda y sale negativo.
+
+### Preguntas
+
+- **¿Qué significan `%1$d` y `%2$d`?** Son huecos para números enteros. El número indica qué parámetro va en cada uno: `%1$d` se rellena con el primero que se pasa a `getString()` (`EDAD_MINIMA`) y `%2$d` con el segundo (`EDAD_MAXIMA`).
+- **¿Qué pasaría si dejaras `EditText ageEdit = findViewById(...)` en `onCreate()`?** Se crearía una variable local con el mismo nombre que tapa al atributo. El atributo seguiría a `null` y al usarlo en `calcularEdad()` la app se cerraría con un `NullPointerException`.
+- **¿Por qué limitar la edad a 30 evita el desbordamiento?** Porque el resultado máximo es 30 × 7 = 210, muy lejos del límite de un `int`.
+- **¿Cómo comprobar que el `try/catch` funciona?** Quitando un momento `android:inputType="number"` del layout para poder escribir `abc` o `3.5`: la app muestra "Introduce un número entero válido" y no se cierra.
