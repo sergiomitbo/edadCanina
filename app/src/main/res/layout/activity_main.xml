@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:textSize="48sp"
-        android:hint="Ejemplo: 6"
+        android:hint="@string/hint_edad"
         android:id="@+id/age_input"
         />
 
