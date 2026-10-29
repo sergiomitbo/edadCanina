@@ -15,27 +15,27 @@ public class MainActivity extends AppCompatActivity {
     private static final int EDAD_MINIMA = 1;
     private static final int EDAD_MAXIMA = 30; // ningún perro supera esta edad
 
+    // Vistas que se usan en varios métodos
+    private EditText ageEdit;
+    private TextView resultText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        // Declaramos variables
-        EditText ageEdit = findViewById(R.id.age_input);
-        TextView resultText = findViewById(R.id.result_text);
+        ageEdit = findViewById(R.id.age_input);
+        resultText = findViewById(R.id.result_text);
         Button button1 = findViewById(R.id.btn_calc);
 
+        button1.setOnClickListener(view -> calcularEdad());
+    }
 
-        // Implementar el boton (setOnClickListener)
-        button1.setOnClickListener(view -> {
-
-            String ageString = ageEdit.getText().toString();
-            int age = Integer.parseInt(ageString);
-            int dogAge = age * FACTOR_CANINO;
-            resultText.setText(getString(R.string.tu_edad_format, dogAge));
-        });
-
-
+    private void calcularEdad() {
+        String ageString = ageEdit.getText().toString();
+        int age = Integer.parseInt(ageString);
+        int dogAge = age * FACTOR_CANINO;
+        resultText.setText(getString(R.string.tu_edad_format, dogAge));
     }
 }
