@@ -38,4 +38,10 @@ public class MainActivity extends AppCompatActivity {
         int dogAge = age * FACTOR_CANINO;
         resultText.setText(getString(R.string.tu_edad_format, dogAge));
     }
+
+    private void mostrarError(String mensaje) {
+        ageEdit.setError(mensaje);
+        ageEdit.requestFocus();
+        resultText.setText("");
+    }
 }
