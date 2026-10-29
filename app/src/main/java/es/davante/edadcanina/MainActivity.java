@@ -33,8 +33,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void calcularEdad() {
-        String ageString = ageEdit.getText().toString();
-        int age = Integer.parseInt(ageString);
+        // 1. Leer el texto quitando espacios
+        String ageString = ageEdit.getText().toString().trim();
+
+        // 2. Campo vacío
+        if (ageString.isEmpty()) {
+            mostrarError(getString(R.string.error_vacio));
+            return;
+        }
+
+        // 3. Convertir a número
+        int age;
+        try {
+            age = Integer.parseInt(ageString);
+        } catch (NumberFormatException e) {
+            mostrarError(getString(R.string.error_no_numero));
+            return;
+        }
+
+        // 4. Comprobar el rango
+        if (age < EDAD_MINIMA || age > EDAD_MAXIMA) {
+            mostrarError(getString(R.string.error_rango, EDAD_MINIMA, EDAD_MAXIMA));
+            return;
+        }
+
+        // 5. Todo correcto: quitar el error y mostrar el resultado
+        ageEdit.setError(null);
         int dogAge = age * FACTOR_CANINO;
         resultText.setText(getString(R.string.tu_edad_format, dogAge));
     }
