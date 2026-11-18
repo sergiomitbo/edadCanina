@@ -1,9 +1,17 @@
 package es.davante.edadcanina.modelo;
 
+import androidx.databinding.Observable;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import es.davante.edadcanina.BR;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Pruebas del modelo. Se ejecutan en el PC, sin emulador, porque el modelo
@@ -98,5 +106,41 @@ public class EdadCaninaModeloTest {
 
         assertEquals(Validacion.SIN_CALCULAR, modelo.getValidacion());
         assertEquals(0, modelo.getEdadHumana());
+    }
+
+    @Test
+    public void calcular_avisaDeLosCambios() {
+        // Apuntamos un oyente igual que hace el binding y anotamos de qué nos avisa
+        List<Integer> avisos = new ArrayList<>();
+        modelo.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                avisos.add(propertyId);
+            }
+        });
+        modelo.setEdadTexto("6");
+        avisos.clear();
+
+        modelo.calcular();
+
+        assertTrue(avisos.contains(BR.validacion));
+        assertTrue(avisos.contains(BR.edadHumana));
+    }
+
+    @Test
+    public void mismoTexto_noAvisa() {
+        modelo.setEdadTexto("6");
+        List<Integer> avisos = new ArrayList<>();
+        modelo.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                avisos.add(propertyId);
+            }
+        });
+
+        // Es lo que pasa en el viaje de vuelta del @={}: el texto llega igual que estaba
+        modelo.setEdadTexto("6");
+
+        assertTrue(avisos.isEmpty());
     }
 }

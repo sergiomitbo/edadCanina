@@ -26,20 +26,19 @@ public class MainActivity extends AppCompatActivity {
         // Esta versión de setContentView infla el layout y además devuelve el binding
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         modelo = new EdadCaninaModelo();
+        // Desde aquí el binding escucha al modelo y repinta la vista cuando este avisa
+        binding.setModelo(modelo);
 
         binding.btnCalc.setOnClickListener(view -> calcularEdad());
     }
 
     private void calcularEdad() {
-        // La Activity solo pasa el texto al modelo y pinta lo que este responde
-        modelo.setEdadTexto(binding.ageInput.getText().toString());
+        // No hace falta leer el EditText: con @={} el modelo ya tiene el texto.
+        // El resultado tampoco se pinta aquí: lo pinta el XML cuando el modelo avisa.
         Validacion resultado = modelo.calcular();
 
+        // El error, de momento, se sigue pintando a mano
         switch (resultado) {
-            case OK:
-                binding.ageInput.setError(null);
-                binding.resultText.setText(getString(R.string.tu_edad_format, modelo.getEdadHumana()));
-                break;
             case VACIO:
                 mostrarError(getString(R.string.error_vacio));
                 break;
@@ -51,7 +50,8 @@ public class MainActivity extends AppCompatActivity {
                         EdadCaninaModelo.EDAD_MINIMA, EdadCaninaModelo.EDAD_MAXIMA));
                 break;
             default:
-                // SIN_CALCULAR: calcular() nunca lo devuelve, no hay nada que pintar
+                // OK (SIN_CALCULAR no puede salir de calcular()): sin error
+                binding.ageInput.setError(null);
                 break;
         }
     }
@@ -59,6 +59,5 @@ public class MainActivity extends AppCompatActivity {
     private void mostrarError(String mensaje) {
         binding.ageInput.setError(mensaje);
         binding.ageInput.requestFocus();
-        binding.resultText.setText("");
     }
 }
