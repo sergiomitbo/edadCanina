@@ -7,17 +7,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import es.davante.edadcanina.databinding.ActivityMainBinding;
+import es.davante.edadcanina.modelo.EdadCaninaModelo;
+import es.davante.edadcanina.modelo.Validacion;
 
 public class MainActivity extends AppCompatActivity {
-
-    // Constantes
-    private static final int FACTOR_CANINO = 7;
-    private static final int EDAD_MINIMA = 1;
-    private static final int EDAD_MAXIMA = 30; // ningún perro supera esta edad
 
     // El binding sustituye a los findViewById: tiene un campo por cada vista con id.
     // Si un id está mal escrito, ahora el error sale al compilar y no al ejecutar.
     private ActivityMainBinding binding;
+
+    // Las reglas (validar y calcular) ya no están aquí: las tiene el modelo
+    private EdadCaninaModelo modelo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,39 +25,35 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         // Esta versión de setContentView infla el layout y además devuelve el binding
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        modelo = new EdadCaninaModelo();
 
         binding.btnCalc.setOnClickListener(view -> calcularEdad());
     }
 
     private void calcularEdad() {
-        // 1. Leer el texto quitando espacios
-        String ageString = binding.ageInput.getText().toString().trim();
+        // La Activity solo pasa el texto al modelo y pinta lo que este responde
+        modelo.setEdadTexto(binding.ageInput.getText().toString());
+        Validacion resultado = modelo.calcular();
 
-        // 2. Campo vacío
-        if (ageString.isEmpty()) {
-            mostrarError(getString(R.string.error_vacio));
-            return;
+        switch (resultado) {
+            case OK:
+                binding.ageInput.setError(null);
+                binding.resultText.setText(getString(R.string.tu_edad_format, modelo.getEdadHumana()));
+                break;
+            case VACIO:
+                mostrarError(getString(R.string.error_vacio));
+                break;
+            case NO_NUMERO:
+                mostrarError(getString(R.string.error_no_numero));
+                break;
+            case FUERA_DE_RANGO:
+                mostrarError(getString(R.string.error_rango,
+                        EdadCaninaModelo.EDAD_MINIMA, EdadCaninaModelo.EDAD_MAXIMA));
+                break;
+            default:
+                // SIN_CALCULAR: calcular() nunca lo devuelve, no hay nada que pintar
+                break;
         }
-
-        // 3. Convertir a número
-        int age;
-        try {
-            age = Integer.parseInt(ageString);
-        } catch (NumberFormatException e) {
-            mostrarError(getString(R.string.error_no_numero));
-            return;
-        }
-
-        // 4. Comprobar el rango
-        if (age < EDAD_MINIMA || age > EDAD_MAXIMA) {
-            mostrarError(getString(R.string.error_rango, EDAD_MINIMA, EDAD_MAXIMA));
-            return;
-        }
-
-        // 5. Todo correcto: quitar el error y mostrar el resultado
-        binding.ageInput.setError(null);
-        int dogAge = age * FACTOR_CANINO;
-        binding.resultText.setText(getString(R.string.tu_edad_format, dogAge));
     }
 
     private void mostrarError(String mensaje) {
