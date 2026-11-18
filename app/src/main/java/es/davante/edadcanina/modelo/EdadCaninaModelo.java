@@ -109,6 +109,17 @@ public class EdadCaninaModelo extends BaseObservable {
         return validacion;
     }
 
+    /**
+     * Deja el modelo como recién creado (botón Limpiar).
+     * Se ponen las tres cosas a mano porque, si el texto ya estaba vacío (por ejemplo,
+     * tras el error de campo vacío), setEdadTexto("") no cambia nada y el error seguiría.
+     */
+    public void limpiar() {
+        setEdadTexto("");
+        setEdadHumana(0);
+        setValidacion(Validacion.SIN_CALCULAR);
+    }
+
     // Si hay un error, el resultado anterior se borra para que no se quede a la vista
     private Validacion guardarError(Validacion error) {
         setEdadHumana(0);

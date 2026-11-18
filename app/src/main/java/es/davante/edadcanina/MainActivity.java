@@ -6,9 +6,14 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import es.davante.edadcanina.controlador.EdadCaninaControlador;
 import es.davante.edadcanina.databinding.ActivityMainBinding;
 import es.davante.edadcanina.modelo.EdadCaninaModelo;
 
+/**
+ * La Activity ya no valida, ni calcula, ni pinta, ni escucha clics: solo crea las tres
+ * piezas (modelo, vista y controlador) y las conecta.
+ */
 public class MainActivity extends AppCompatActivity {
 
     // El binding sustituye a los findViewById: tiene un campo por cada vista con id.
@@ -25,10 +30,10 @@ public class MainActivity extends AppCompatActivity {
         // Esta versión de setContentView infla el layout y además devuelve el binding
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         modelo = new EdadCaninaModelo();
-        // Desde aquí el binding escucha al modelo y repinta la vista cuando este avisa
-        binding.setModelo(modelo);
 
-        // Resultado y error los pinta el XML cuando el modelo avisa: aquí solo se calcula
-        binding.btnCalc.setOnClickListener(view -> modelo.calcular());
+        // Se entregan al binding las dos variables del XML. Si faltara el controlador,
+        // las lambdas de los botones no harían nada al pulsarlos.
+        binding.setModelo(modelo);
+        binding.setControlador(new EdadCaninaControlador(modelo));
     }
 }

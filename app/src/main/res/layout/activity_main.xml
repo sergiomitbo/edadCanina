@@ -11,6 +11,10 @@
         <variable
             name="modelo"
             type="es.davante.edadcanina.modelo.EdadCaninaModelo" />
+
+        <variable
+            name="controlador"
+            type="es.davante.edadcanina.controlador.EdadCaninaControlador" />
     </data>
 
     <!-- <layout> como raíz activa DataBinding en este fichero: al compilar se genera
@@ -76,13 +80,35 @@
             android:textSize="16sp"
             android:visibility="@{modelo.validacion == Validacion.OK ? View.VISIBLE : View.INVISIBLE}" />
 
-        <Button
-            android:id="@+id/btn_calc"
+        <!-- Los dos botones en una fila; layout_weight reparte el ancho a partes iguales.
+             Los clics van al controlador con una lambda, que se ejecuta al pulsar -->
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="@string/btn_calc"
-            android:textSize="22sp" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_calc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:onClick="@{() -> controlador.onCalcularClick()}"
+                android:text="@string/btn_calc"
+                android:textSize="22sp" />
+
+            <Button
+                android:id="@+id/btn_limpiar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:onClick="@{() -> controlador.onLimpiarClick()}"
+                android:text="@string/btn_limpiar"
+                android:textSize="22sp" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>
