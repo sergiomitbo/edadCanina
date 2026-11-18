@@ -47,7 +47,9 @@
             android:textColor="@color/black"
             android:textSize="16sp" />
 
-        <!-- @={} enlaza en los dos sentidos: lo que escribe el usuario llega solo al modelo -->
+        <!-- @={} enlaza en los dos sentidos: lo que escribe el usuario llega solo al modelo.
+             app:errorValidacion es un atributo propio (vista/AdaptadoresVista) que pinta el
+             error a partir de la Validacion del modelo -->
         <EditText
             android:id="@+id/age_input"
             android:layout_width="match_parent"
@@ -59,7 +61,8 @@
             android:inputType="number"
             android:maxLength="2"
             android:text="@={modelo.edadTexto}"
-            android:textSize="48sp" />
+            android:textSize="48sp"
+            app:errorValidacion="@{modelo.validacion}" />
 
         <!-- El resultado se pinta solo a partir del modelo. INVISIBLE y no GONE: así el
              TextView sigue ocupando su sitio y el botón no salta al aparecer el texto -->
