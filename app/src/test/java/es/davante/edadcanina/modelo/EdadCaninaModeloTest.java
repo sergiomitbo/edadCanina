@@ -143,4 +143,33 @@ public class EdadCaninaModeloTest {
 
         assertTrue(avisos.isEmpty());
     }
+
+    // --- Reto «Casos raros» ---
+
+    @Test
+    public void ceroALaIzquierda_esValido() {
+        modelo.setEdadTexto("05");
+        assertEquals(Validacion.OK, modelo.calcular());
+        assertEquals(35, modelo.getEdadHumana());
+    }
+
+    @Test
+    public void signoMas_daErrorNoNumero() {
+        // parseInt lo aceptaría como 5, pero hemos decidido que una edad no lleva signo
+        modelo.setEdadTexto("+5");
+        assertEquals(Validacion.NO_NUMERO, modelo.calcular());
+    }
+
+    @Test
+    public void signoMenos_daErrorNoNumero() {
+        modelo.setEdadTexto("-4");
+        assertEquals(Validacion.NO_NUMERO, modelo.calcular());
+    }
+
+    @Test
+    public void numeroQueNoCabeEnUnInt_daErrorNoNumero() {
+        // Con maxLength="2" no se puede escribir, pero el modelo no se cierra si le llega
+        modelo.setEdadTexto("99999999999");
+        assertEquals(Validacion.NO_NUMERO, modelo.calcular());
+    }
 }

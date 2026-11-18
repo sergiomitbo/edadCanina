@@ -92,11 +92,19 @@ public class EdadCaninaModelo extends BaseObservable {
             return guardarError(Validacion.VACIO);
         }
 
+        // Reto «Casos raros»: solo se aceptan cifras. Integer.parseInt da por buenos
+        // "+5" y "-4", pero una edad no lleva signo (el teclado numérico tampoco deja
+        // escribirlo) y el modelo no debe fiarse de lo que filtre la vista.
+        // "05" sí vale: el cero de la izquierda no cambia el número.
+        if (!texto.matches("[0-9]+")) {
+            return guardarError(Validacion.NO_NUMERO);
+        }
+
         int edad;
         try {
             edad = Integer.parseInt(texto);
         } catch (NumberFormatException e) {
-            // Letras, decimales o un número que no cabe en un int
+            // Son cifras, pero tantas que el número no cabe en un int
             return guardarError(Validacion.NO_NUMERO);
         }
 
