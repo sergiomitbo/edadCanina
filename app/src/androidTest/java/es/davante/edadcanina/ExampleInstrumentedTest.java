@@ -21,6 +21,7 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("es.davante.edadcanina", appContext.getPackageName());
+        // El paquete instalado es el applicationId, que ahora termina en .mvc
+        assertEquals("es.davante.edadcanina.mvc", appContext.getPackageName());
     }
 }

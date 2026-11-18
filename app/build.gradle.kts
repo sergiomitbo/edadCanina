@@ -9,7 +9,8 @@ android {
     }
 
     defaultConfig {
-        applicationId = "es.davante.edadcanina"
+        // Id distinto al de la v2 para poder tener las dos apps instaladas a la vez
+        applicationId = "es.davante.edadcanina.mvc"
         minSdk = 24
         targetSdk = 37
         versionCode = 1
@@ -28,6 +29,11 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+    buildFeatures {
+        // Al compilar, DataBinding genera las clases que enlazan el XML con Java
+        // (ActivityMainBinding y BR), así no hay que buscar las vistas a mano
+        dataBinding = true
     }
 }
 
